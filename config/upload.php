@@ -1,0 +1,73 @@
+<?php
+class Upload{
+
+	// Diretorio do arquivo onde será feito o Upload
+	public $diretorio = "docs/";
+
+	// Enviando 7 Megas
+	public $tamanho   = 7000000;
+
+	// Extencao que permitidas no programa
+	public $extencao  = array('jpeg','jpg','xls', 'xlsx', 'png','pdf','doc', 'docx');
+
+	// Separador do nome do Arquivo
+	public $separador = '-';
+
+
+
+
+	function upload($arquivo , $tamanho , $tmp_nome , $tipo){
+		$up = Upload::verificaTamanhoArquivo($arquivo , $tamanho , $tmp_nome , $tipo);
+		if($up == 1){
+			echo "<script>alert('Enviado com sucesso');</script>";
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+
+	function verificaTamanhoArquivo($arquivo , $tamanho , $tmp_nome , $tipo){
+
+		if($tamanho > $this->tamanho){
+			echo "<script>alert('O Arquivo é grande, selecione outro !');</script>";
+			return false;
+		}else{
+
+			$retorno = Upload::verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo);
+			if($retorno == 1){
+				$nomeIndentificado = date('d-m-Y');
+				$upload = move_uploaded_file($tmp_nome , $this->diretorio.$nomeIndentificado.$this->separador.$arquivo);
+
+                $mysqlArq = addslashes(fread(fopen($this->diretorio.$nomeIndentificado.$this->separador.$arquivo, "r"), $tamanho));
+                $nomeFinal = $this->diretorio.$nomeIndentificado.$this->separador.$arquivo;
+                $nome = $nomeIndentificado.$this->separador.$arquivo;
+
+                $con=mysqli_connect("localhost","root","1234","db_upload");
+
+
+                $sql="INSERT INTO docs(arquivo, nomeFinal, nome) VALUES('$mysqlArq', '$nomeFinal', '$nome')";
+                $result = mysqli_query($con,$sql);
+				return 1;
+
+
+
+
+			}else{
+				echo "<script>alert('Extencao do arquivo invalida!!!');</script>";
+				return 0;
+			}
+		}
+	}
+
+	function verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo){
+		$extencaoArquivo['extencao'] = explode('.' , $arquivo);
+		if(in_array($extencaoArquivo['extencao'][1] , $this->extencao)){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+
+}
+?>

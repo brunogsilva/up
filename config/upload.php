@@ -37,10 +37,12 @@ class Upload{
 			$retorno = Upload::verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo);
 			if($retorno == 1){
 				$nomeIndentificado = date('d-m-Y');
+                $arquivo = str_replace(" ","_",preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($arquivo))));
 				$upload = move_uploaded_file($tmp_nome , $this->diretorio.$nomeIndentificado.$this->separador.$arquivo);
 
                 $mysqlArq = addslashes(fread(fopen($this->diretorio.$nomeIndentificado.$this->separador.$arquivo, "r"), $tamanho));
                 $nomeFinal = $this->diretorio.$nomeIndentificado.$this->separador.$arquivo;
+
                 $nome = $nomeIndentificado.$this->separador.$arquivo;
 
                 $con=mysqli_connect("localhost","root","1234","db_upload");

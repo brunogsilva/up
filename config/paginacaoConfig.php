@@ -15,9 +15,18 @@
     $inicio = $pg -1;
     $inicio = $inicio * $total_reg;
 
+    $select = $_POST["select"];
 
+    if ($select == '') {
+        $busca_perso =  "SELECT * FROM docs LIMIT $inicio, $total_reg";
+    } else {
+        $busca_perso =  "SELECT * FROM docs WHERE uf = '$select' LIMIT $inicio, $total_reg";
+    }
 
-    $busca_perso =  "SELECT * FROM docs LIMIT $inicio, $total_reg";
+  //  $busca_perso =  "SELECT * FROM docs WHERE uf = '$select' LIMIT $inicio, $total_reg";
+
+    echo $busca_perso;
+
     $limite = mysqli_query($con,$busca_perso);
     $todos = mysqli_query($con,$sql);
     $tr = mysqli_num_rows($todos); // verifica o número total de registros

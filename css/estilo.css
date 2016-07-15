@@ -4,7 +4,7 @@
 }
 
 h1 {width:100%; text-align:center;}
-span.bt-enviar {padding:10px 0; display:table;}
+span.bt-enviar {display:table;}
 
 .btn-file {
     position: relative;
@@ -24,4 +24,9 @@ span.bt-enviar {padding:10px 0; display:table;}
     background: white;
     cursor: inherit;
     display: block;
+}
+.link-disabled {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.6;
 }

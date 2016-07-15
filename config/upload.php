@@ -16,8 +16,8 @@ class Upload{
 
 
 
-	function upload($arquivo , $tamanho , $tmp_nome , $tipo){
-		$up = Upload::verificaTamanhoArquivo($arquivo , $tamanho , $tmp_nome , $tipo);
+	function upload($arquivo , $tamanho , $tmp_nome , $tipo, $estado){
+		$up = Upload::verificaTamanhoArquivo($arquivo , $tamanho , $tmp_nome , $tipo, $estado);
 		if($up == 1){
 			echo "<script>alert('Enviado com sucesso');</script>";
 			return true;
@@ -27,14 +27,14 @@ class Upload{
 	}
 
 
-	function verificaTamanhoArquivo($arquivo , $tamanho , $tmp_nome , $tipo){
+	function verificaTamanhoArquivo($arquivo , $tamanho , $tmp_nome , $tipo, $estado){
 
 		if($tamanho > $this->tamanho){
 			echo "<script>alert('O Arquivo é grande, selecione outro !');</script>";
 			return false;
 		}else{
 
-			$retorno = Upload::verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo);
+			$retorno = Upload::verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo, $estado);
 			if($retorno == 1){
 				$nomeIndentificado = date('d-m-Y');
                 $arquivo = str_replace(" ","_",preg_replace("/&([a-z])[a-z]+;/i", "$1", htmlentities(trim($arquivo))));
@@ -47,8 +47,10 @@ class Upload{
 
                 $con=mysqli_connect("localhost","root","1234","db_upload");
 
+                $ext = pathinfo($arquivo, PATHINFO_EXTENSION);
+                $tipo = $ext;
 
-                $sql="INSERT INTO docs(arquivo, nomeFinal, nome) VALUES('$mysqlArq', '$nomeFinal', '$nome')";
+                $sql="INSERT INTO docs(arquivo, nomeFinal, nome, tipo, uf) VALUES('$mysqlArq', '$nomeFinal', '$nome', '$tipo', '$estado')";
                 $result = mysqli_query($con,$sql);
 				return 1;
 
@@ -62,7 +64,7 @@ class Upload{
 		}
 	}
 
-	function verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo){
+	function verificaTipoArquivo($arquivo , $tamanho , $tmp_nome , $tipo, $estado){
 		$extencaoArquivo['extencao'] = explode('.' , $arquivo);
 		if(in_array($extencaoArquivo['extencao'][1] , $this->extencao)){
 			return 1;

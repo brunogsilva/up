@@ -8,7 +8,7 @@ class Upload{
 	public $tamanho   = 7000000;
 
 	// Extencao que permitidas no programa
-	public $extencao  = array('jpeg','jpg','xls', 'xlsx', 'png','pdf','doc', 'docx');
+	public $extencao  = array('jpeg','jpg','xls', 'xlsx', 'png','pdf');
 
 	// Separador do nome do Arquivo
 	public $separador = '-';
